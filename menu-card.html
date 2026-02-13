@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Just Grabs Cafe — Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --paper: #f5f0eb;
+      --muted: #5a524c;
+      --border: #e0d8d0;
+      --c1: #b54a2a;
+      --c2: #c77b1e;
+      --c3: #1a7f5c;
+      --c4: #9c2780;
+      --c5: #4a5bb5;
+      --c6: #c62828;
+      --c7: #2e7d32;
+      --c8: #1565c0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: linear-gradient(160deg, #fef9f3 0%, #f0e6dc 50%, #e8ddd2 100%);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .menu {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      position: relative;
+    }
+    .lang-switch {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+    }
+    .lang-switch a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      padding: 0 0.35rem;
+    }
+    .lang-switch a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    .lang-switch a.active {
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      cursor: default;
+      pointer-events: none;
+    }
+    .lang-switch .sep {
+      color: rgba(255,255,255,0.6);
+      padding: 0 0.2rem;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 1200px) {
+      .categories-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .categories-grid { grid-template-columns: 1fr; }
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding: 2.25rem 2rem;
+      background: linear-gradient(135deg, #c62828 0%, #e53935 40%, #1565c0 70%, #0d47a1 100%);
+      border-radius: 20px;
+      color: #fff;
+      box-shadow: 0 10px 40px rgba(21, 101, 192, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    header .logo-wrap {
+      position: relative;
+    }
+    header .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.75rem, 4.5vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      margin: 0;
+    }
+    header .logo-cafe {
+      display: block;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.7em;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      opacity: 0.95;
+      margin-top: 0.2rem;
+    }
+    .header-divider {
+      width: 48px;
+      height: 3px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 2px;
+      margin: 0.9rem auto 0.75rem;
+    }
+    .tagline {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.92);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+    }
+    .header-address {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.88);
+      margin-top: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+    .header-address a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .header-address a:hover {
+      color: #fff;
+    }
+
+    .item--popular .item-name::after {
+      content: " Popular";
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--cat-color);
+      margin-left: 0.35rem;
+    }
+    body.lang-kn .item--popular .item-name::after {
+      content: " ಜನಪ್ರಿಯ";
+    }
+
+    .category--combos {
+      grid-column: 1 / -1;
+      border: 2px solid var(--c2);
+      background: rgba(199, 123, 30, 0.12);
+      --cat-color: var(--c2);
+    }
+    .category {
+      margin-bottom: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      border: none;
+      background: var(--cat-bg);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .category:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .category-img {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      background: var(--cat-color);
+      line-height: 0;
+    }
+
+    .category-img img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      opacity: 0.95;
+      transition: transform 0.3s;
+    }
+
+    .category:hover .category-img img {
+      transform: scale(1.02);
+    }
+
+    .category-body {
+      padding: 1rem 1.25rem;
+      border-left: 4px solid var(--cat-color);
+    }
+
+    .category:nth-child(3n+1) { --cat-color: var(--c1); --cat-bg: rgba(181, 74, 42, 0.06); }
+    .category:nth-child(3n+2) { --cat-color: var(--c3); --cat-bg: rgba(26, 127, 92, 0.06); }
+    .category:nth-child(3n+3) { --cat-color: var(--c4); --cat-bg: rgba(156, 39, 128, 0.06); }
+    .category:nth-child(6n+4) { --cat-color: var(--c2); --cat-bg: rgba(199, 123, 30, 0.07); }
+    .category:nth-child(6n+5) { --cat-color: var(--c6); --cat-bg: rgba(198, 40, 40, 0.06); }
+    .category:nth-child(6n+6) { --cat-color: var(--c5); --cat-bg: rgba(74, 91, 181, 0.06); }
+    .category:nth-child(8n+7) { --cat-color: var(--c7); --cat-bg: rgba(46, 125, 50, 0.06); }
+    .category:nth-child(8n) { --cat-color: var(--c8); --cat-bg: rgba(21, 101, 192, 0.06); }
+
+    .category-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--cat-color);
+      margin-bottom: 0.65rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid var(--cat-color);
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px dotted var(--border);
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item-name {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .item-price {
+      font-weight: 600;
+      color: var(--cat-color);
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .item--combo {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .item-combo-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .item-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2rem;
+      padding: 0.75rem;
+      background: rgba(181, 74, 42, 0.08);
+      border-radius: 8px;
+    }
+    .qr-block {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding: 1rem;
+    }
+    .qr-block img {
+      display: block;
+      margin: 0 auto 0.5rem;
+      width: 140px;
+      height: 140px;
+    }
+    .qr-block span {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <header>
+      <div class="logo-wrap">
+        <h1 class="logo"><span id="logoMain">Just Grabs</span><span class="logo-cafe" id="logoCafe">Cafe</span></h1>
+      </div>
+      <div class="header-divider"></div>
+      <p class="tagline" id="tagline">Eat. Sip. Repeat.</p>
+      <p class="header-address"><a href="https://maps.app.goo.gl/2FHb4zePKwCwzpb26" target="_blank" rel="noopener">Kenagunte Circle, Nagarbhavi</a></p>
+      <p class="lang-switch">
+        <a href="#" id="langEn" data-lang="en">English</a>
+        <span class="sep">|</span>
+        <a href="#" id="langKn" data-lang="kn">ಕನ್ನಡ</a>
+      </p>
+    </header>
+
+    <div class="categories-grid">
+    <section class="category" data-category="hot_sips">
+      <div class="category-img"><img loading="lazy" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" alt="Hot Sips"></div>
+      <div class="category-body">
+      <h2 class="category-title">Hot Sips</h2>
+      <div class="item"><span class="item-name">Tea</span><span class="item-price">₹15</span></div>
+      <div class="item"><span class="item-name">Coffee</span><span class="item-price">₹20</span></div>
+      <div class="item"><span class="item-name">Black Coffee</span><span class="item-price">₹15</span></div>
+      <div class="item"><span class="item-name">Chocolate Coffee</span><span class="item-price">₹20</span></div>
+      <div class="item"><span class="item-name">Lime Tea</span><span class="item-price">₹15</span></div>
+      <div class="item"><span class="item-name">Badam Milk</span><span class="item-price">₹20</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="mojitos">
+      <div class="category-img"><img loading="lazy" src="mojitos.png" alt="Mojitos"></div>
+      <div class="category-body">
+      <h2 class="category-title">Mojitos</h2>
+      <div class="item item--popular"><span class="item-name">Classic Mojito</span><span class="item-price">₹59</span></div>
+      <div class="item"><span class="item-name">Strawberry Mojito</span><span class="item-price">₹49</span></div>
+      <div class="item"><span class="item-name">Blue Lagoon</span><span class="item-price">₹65</span></div>
+      <div class="item"><span class="item-name">Green Apple Mojito</span><span class="item-price">₹69</span></div>
+      <div class="item"><span class="item-name">Tropical Love</span><span class="item-price">₹69</span></div>
+      <div class="item"><span class="item-name">2 Spine</span><span class="item-price">₹69</span></div>
+      <div class="item"><span class="item-name">Hammered</span><span class="item-price">₹69</span></div>
+      <div class="item"><span class="item-name">Lime Juice</span><span class="item-price">₹50</span></div>
+      <div class="item"><span class="item-name">Lemon Soda</span><span class="item-price">₹70</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="milkshakes">
+      <div class="category-img"><img loading="lazy" src="milkshakes.png" alt="Milkshakes"></div>
+      <div class="category-body">
+      <h2 class="category-title">Milkshakes</h2>
+      <div class="item item--popular"><span class="item-name">JG's Cold Coffee</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Kit-Kat Milk</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Mango Milk</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Oreo Milk</span><span class="item-price">₹70</span></div>
+      <div class="item"><span class="item-name">Chocolate Milk</span><span class="item-price">₹65</span></div>
+      <div class="item"><span class="item-name">Strawberry Milk</span><span class="item-price">₹65</span></div>
+      <div class="item"><span class="item-name">Butterscotch Milk</span><span class="item-price">₹65</span></div>
+      <div class="item"><span class="item-name">Rose Milk</span><span class="item-price">₹65</span></div>
+      <div class="item"><span class="item-name">Pista Milk</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Vanilla Milk</span><span class="item-price">₹59</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="chaats">
+      <div class="category-img"><img loading="lazy" src="pani-puri.png" alt="Pani Puri"></div>
+      <div class="category-body">
+      <h2 class="category-title">Chaats</h2>
+      <div class="item item--popular"><span class="item-name">Jus Grab's Special</span><span class="item-price">₹60</span></div>
+      <div class="item"><span class="item-name">Pani Puri</span><span class="item-price">₹40</span></div>
+      <div class="item"><span class="item-name">Dahi Puri</span><span class="item-price">₹50</span></div>
+      <div class="item"><span class="item-name">Bhel Puri</span><span class="item-price">₹50</span></div>
+      <div class="item"><span class="item-name">Masala Puri</span><span class="item-price">₹45</span></div>
+      <div class="item"><span class="item-name">Tikki Puri</span><span class="item-price">₹45</span></div>
+      <div class="item"><span class="item-name">Sev Puri</span><span class="item-price">₹40</span></div>
+      <div class="item"><span class="item-name">Boti Masala</span><span class="item-price">₹40</span></div>
+      <div class="item"><span class="item-name">Nippat Masala</span><span class="item-price">₹40</span></div>
+      <div class="item"><span class="item-name">Samosa Masala</span><span class="item-price">₹40</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="bites">
+      <div class="category-img"><img loading="lazy" src="french-fries.png" alt="French Fries"></div>
+      <div class="category-body">
+      <h2 class="category-title">Bites</h2>
+      <div class="item"><span class="item-name">French Fries</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Peri Peri Fries</span><span class="item-price">₹85</span></div>
+      <div class="item"><span class="item-name">Cheese Fries</span><span class="item-price">₹95</span></div>
+      <div class="item"><span class="item-name">Chicken Cheese Fries</span><span class="item-price">₹125</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="nuggets">
+      <div class="category-img"><img loading="lazy" src="nuggets.png" alt="Nuggets"></div>
+      <div class="category-body">
+      <h2 class="category-title">Nuggets</h2>
+      <div class="item"><span class="item-name">Chicken Nuggets</span><span class="item-price">₹89</span></div>
+      <div class="item"><span class="item-name">Cheese Corn Nuggets</span><span class="item-price">₹79</span></div>
+      <div class="item"><span class="item-name">Veg Fingers</span><span class="item-price">₹79</span></div>
+      <div class="item"><span class="item-name">Cheese Balls</span><span class="item-price">₹69</span></div>
+      <div class="item"><span class="item-name">Veg Smileys</span><span class="item-price">₹59</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="momos">
+      <div class="category-img"><img loading="lazy" src="momos.png" alt="Momos"></div>
+      <div class="category-body">
+      <h2 class="category-title">Momos</h2>
+      <div class="item"><span class="item-name">Chicken Momos</span><span class="item-price">₹99</span></div>
+      <div class="item"><span class="item-name">Corn Momos</span><span class="item-price">₹95</span></div>
+      <div class="item"><span class="item-name">Paneer Momos</span><span class="item-price">₹90</span></div>
+      <div class="item"><span class="item-name">Veg Momos</span><span class="item-price">₹80</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="pasta">
+      <div class="category-img"><img loading="lazy" src="pasta.png" alt="Pasta"></div>
+      <div class="category-body">
+      <h2 class="category-title">Pasta</h2>
+      <div class="item"><span class="item-name">Chicken Pasta</span><span class="item-price">₹90</span></div>
+      <div class="item"><span class="item-name">Red Sauce Pasta</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">White Sauce Pasta</span><span class="item-price">₹70</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="pizza">
+      <div class="category-img"><img loading="lazy" src="pizza.png" alt="Pizza"></div>
+      <div class="category-body">
+      <h2 class="category-title">Pizza</h2>
+      <div class="item"><span class="item-name">Chicken Tikka Pizza</span><span class="item-price">₹130</span></div>
+      <div class="item"><span class="item-name">Paneer Tikka Pizza</span><span class="item-price">₹120</span></div>
+      <div class="item"><span class="item-name">Loaded Veg Pizza</span><span class="item-price">₹109</span></div>
+      <div class="item"><span class="item-name">Corn Cheese Pizza</span><span class="item-price">₹100</span></div>
+      <div class="item"><span class="item-name">Corn & Jalapeno Pizza</span><span class="item-price">₹100</span></div>
+      <div class="item"><span class="item-name">Jalapeno Pizza</span><span class="item-price">₹100</span></div>
+      <div class="item"><span class="item-name">Onion Cheese Pizza</span><span class="item-price">₹100</span></div>
+      <div class="item"><span class="item-name">Onion & Corn Pizza</span><span class="item-price">₹100</span></div>
+      <div class="item"><span class="item-name">Cheese Capsicum Pizza</span><span class="item-price">₹100</span></div>
+      <div class="item"><span class="item-name">Capsicum & Onion Pizza</span><span class="item-price">₹100</span></div>
+      <div class="item"><span class="item-name">Margherita Pizza</span><span class="item-price">₹69</span></div>
+      <div class="item"><span class="item-name">Extra Cheese</span><span class="item-price">₹19</span></div>
+      <div class="item"><span class="item-name">Extra Paneer</span><span class="item-price">₹19</span></div>
+      <div class="item"><span class="item-name">Extra Chicken</span><span class="item-price">₹29</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="sandwich">
+      <div class="category-img"><img loading="lazy" src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af" alt="Sandwich"></div>
+      <div class="category-body">
+      <h2 class="category-title">Sandwich</h2>
+      <div class="item"><span class="item-name">Veg Sandwich</span><span class="item-price">₹50</span></div>
+      <div class="item"><span class="item-name">Veg Cheese Sandwich</span><span class="item-price">₹60</span></div>
+      <div class="item"><span class="item-name">Paneer Sandwich</span><span class="item-price">₹70</span></div>
+      <div class="item"><span class="item-name">Paneer Cheese Sandwich</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Schezwan Paneer Sandwich</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Schezwan Paneer Cheese Sandwich</span><span class="item-price">₹85</span></div>
+      <div class="item"><span class="item-name">Peri Peri Paneer Sandwich</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Peri Peri Paneer Cheese Sandwich</span><span class="item-price">₹85</span></div>
+      <div class="item"><span class="item-name">Chicken Sandwich</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Chicken Cheese Sandwich</span><span class="item-price">₹90</span></div>
+      <div class="item"><span class="item-name">Chicken Double Decker Sandwich</span><span class="item-price">₹110</span></div>
+      <div class="item"><span class="item-name">Veg Patty Sandwich</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Chicken Patty Sandwich</span><span class="item-price">₹95</span></div>
+      <div class="item"><span class="item-name">Aloo Tikki Sandwich</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Tandoori Paneer Patty Sandwich</span><span class="item-price">₹99</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="rolls">
+      <div class="category-img"><img loading="lazy" src="rolls.png" alt="Rolls"></div>
+      <div class="category-body">
+      <h2 class="category-title">Rolls</h2>
+      <div class="item"><span class="item-name">Chicken Roll</span><span class="item-price">₹90</span></div>
+      <div class="item"><span class="item-name">Peri Peri Chicken Roll</span><span class="item-price">₹95</span></div>
+      <div class="item"><span class="item-name">Chicken Cheese Roll</span><span class="item-price">₹99</span></div>
+      <div class="item"><span class="item-name">Paneer Cheese Roll</span><span class="item-price">₹90</span></div>
+      <div class="item"><span class="item-name">Schezwan Paneer Roll</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Schezwan Paneer Cheese Roll</span><span class="item-price">₹90</span></div>
+      <div class="item"><span class="item-name">Paneer Roll</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Veg Cheese Roll</span><span class="item-price">₹70</span></div>
+      <div class="item"><span class="item-name">Double Egg Roll</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Egg Roll</span><span class="item-price">₹65</span></div>
+      <div class="item"><span class="item-name">Veg Roll</span><span class="item-price">₹60</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="maggi">
+      <div class="category-img"><img loading="lazy" src="maggi.png" alt="Maggi"></div>
+      <div class="category-body">
+      <h2 class="category-title">Maggi</h2>
+      <div class="item"><span class="item-name">Classic Maggi</span><span class="item-price">₹40</span></div>
+      <div class="item"><span class="item-name">Cheese Classic Maggi</span><span class="item-price">₹55</span></div>
+      <div class="item"><span class="item-name">Creamy Veg Maggi</span><span class="item-price">₹70</span></div>
+      <div class="item"><span class="item-name">Cheese Schezwan Maggi</span><span class="item-price">₹65</span></div>
+      <div class="item"><span class="item-name">JG's Veg Maggi</span><span class="item-price">₹70</span></div>
+      <div class="item"><span class="item-name">Corn Chilli Cheese Maggi</span><span class="item-price">₹65</span></div>
+      <div class="item"><span class="item-name">Peri Peri Maggi</span><span class="item-price">₹70</span></div>
+      <div class="item"><span class="item-name">Paneer Maggi</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Korean Maggi</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Chicken Maggi</span><span class="item-price">₹90</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="burger">
+      <div class="category-img"><img loading="lazy" src="burger.png" alt="Burger"></div>
+      <div class="category-body">
+      <h2 class="category-title">Burger</h2>
+      <div class="item"><span class="item-name">Classic Veggie Burger</span><span class="item-price">₹85</span></div>
+      <div class="item"><span class="item-name">Aloo Tikki Burger</span><span class="item-price">₹75</span></div>
+      <div class="item"><span class="item-name">Masala Tikki Burger</span><span class="item-price">₹80</span></div>
+      <div class="item"><span class="item-name">Tandoori Paneer Burger</span><span class="item-price">₹99</span></div>
+      <div class="item"><span class="item-name">Chicken Patty Burger</span><span class="item-price">₹95</span></div>
+      <div class="item"><span class="item-name">Hot and Spicy Chicken Burger</span><span class="item-price">₹99</span></div>
+      <div class="item"><span class="item-name">Extra Cheese</span><span class="item-price">₹19</span></div>
+      </div>
+    </section>
+
+    <section class="category" data-category="freaks">
+      <div class="category-img"><img loading="lazy" src="freaks.png" alt="Freaks"></div>
+      <div class="category-body">
+      <h2 class="category-title">Freaks</h2>
+      <div class="item"><span class="item-name">Kit-Kat Freak</span><span class="item-price">₹95</span></div>
+      <div class="item"><span class="item-name">Oreo Freak</span><span class="item-price">₹95</span></div>
+      <div class="item"><span class="item-name">Chocolate Freak</span><span class="item-price">₹90</span></div>
+      <div class="item"><span class="item-name">Strawberry Freak</span><span class="item-price">₹90</span></div>
+      <div class="item"><span class="item-name">Butterscotch Freak</span><span class="item-price">₹85</span></div>
+      <div class="item"><span class="item-name">Pulpy Mango Freak</span><span class="item-price">₹85</span></div>
+      <div class="item"><span class="item-name">Vanilla's More</span><span class="item-price">₹75</span></div>
+      </div>
+    </section>
+
+    <section class="category category--combos" data-category="combos">
+      <div class="category-body">
+      <h2 class="category-title">Combos</h2>
+      <div class="item item--combo"><div class="item-combo-info"><span class="item-name">Freaky Feast</span><span class="item-desc">Aloo Tikki Burger, Kit Kat Freak, French Fries</span></div><span class="item-price">₹190</span></div>
+      <div class="item item--combo item--popular"><div class="item-combo-info"><span class="item-name">Desi Swag</span><span class="item-desc">Paneer Maggi, Butterscotch Milkshake, Peri Peri Fries</span></div><span class="item-price">₹199</span></div>
+      <div class="item item--combo"><div class="item-combo-info"><span class="item-name">Slice & Spice</span><span class="item-desc">Onion & Corn Cheese Pizza, Veg Cheese Sandwich, Vanilla's More Freak</span></div><span class="item-price">₹210</span></div>
+      <div class="item item--combo"><div class="item-combo-info"><span class="item-name">Squad Goals</span><span class="item-desc">Margherita Pizza, Paneer Roll, Egg Roll, White Sauce Pasta, Blue Lagoon Mojito, Peri Peri Fries</span></div><span class="item-price">₹399</span></div>
+      <div class="item item--combo"><div class="item-combo-info"><span class="item-name">All Rounder</span><span class="item-desc">Corn Cheese Pizza, Paneer Cheese Sandwich, Red Sauce Pasta, Strawberry Freak, Paneer Momos, French Fries, Classic Maggi</span></div><span class="item-price">₹469</span></div>
+      </div>
+    </section>
+    </div>
+
+    <p class="note" id="note">Prices subject to change.</p>
+    <div class="qr-block">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://maps.app.goo.gl/2FHb4zePKwCwzpb26" alt="QR code for directions" width="140" height="140">
+      <span id="qrLabel">Scan for directions</span>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var translations = {
+        en: {
+          logoMain: "Just Grabs",
+          logoCafe: "Cafe",
+          tagline: "Eat. Sip. Repeat.",
+          note: "Prices subject to change.",
+          qrLabel: "Scan for directions",
+          categories: {
+            hot_sips: { title: "Hot Sips", items: ["Tea", "Coffee", "Black Coffee", "Chocolate Coffee", "Lime Tea", "Badam Milk"] },
+            mojitos: { title: "Mojitos", items: ["Classic Mojito", "Strawberry Mojito", "Blue Lagoon", "Green Apple Mojito", "Tropical Love", "2 Spine", "Hammered", "Lime Juice", "Lemon Soda"] },
+            milkshakes: { title: "Milkshakes", items: ["JG's Cold Coffee", "Kit-Kat Milk", "Mango Milk", "Oreo Milk", "Chocolate Milk", "Strawberry Milk", "Butterscotch Milk", "Rose Milk", "Pista Milk", "Vanilla Milk"] },
+            chaats: { title: "Chaats", items: ["Jus Grab's Special", "Pani Puri", "Dahi Puri", "Bhel Puri", "Masala Puri", "Tikki Puri", "Sev Puri", "Boti Masala", "Nippat Masala", "Samosa Masala"] },
+            bites: { title: "Bites", items: ["French Fries", "Peri Peri Fries", "Cheese Fries", "Chicken Cheese Fries"] },
+            nuggets: { title: "Nuggets", items: ["Chicken Nuggets", "Cheese Corn Nuggets", "Veg Fingers", "Cheese Balls", "Veg Smileys"] },
+            momos: { title: "Momos", items: ["Chicken Momos", "Corn Momos", "Paneer Momos", "Veg Momos"] },
+            pasta: { title: "Pasta", items: ["Chicken Pasta", "Red Sauce Pasta", "White Sauce Pasta"] },
+            pizza: { title: "Pizza", items: ["Chicken Tikka Pizza", "Paneer Tikka Pizza", "Loaded Veg Pizza", "Corn Cheese Pizza", "Corn & Jalapeno Pizza", "Jalapeno Pizza", "Onion Cheese Pizza", "Onion & Corn Pizza", "Cheese Capsicum Pizza", "Capsicum & Onion Pizza", "Margherita Pizza", "Extra Cheese", "Extra Paneer", "Extra Chicken"] },
+            sandwich: { title: "Sandwich", items: ["Veg Sandwich", "Veg Cheese Sandwich", "Paneer Sandwich", "Paneer Cheese Sandwich", "Schezwan Paneer Sandwich", "Schezwan Paneer Cheese Sandwich", "Peri Peri Paneer Sandwich", "Peri Peri Paneer Cheese Sandwich", "Chicken Sandwich", "Chicken Cheese Sandwich", "Chicken Double Decker Sandwich", "Veg Patty Sandwich", "Chicken Patty Sandwich", "Aloo Tikki Sandwich", "Tandoori Paneer Patty Sandwich"] },
+            rolls: { title: "Rolls", items: ["Chicken Roll", "Peri Peri Chicken Roll", "Chicken Cheese Roll", "Paneer Cheese Roll", "Schezwan Paneer Roll", "Schezwan Paneer Cheese Roll", "Paneer Roll", "Veg Cheese Roll", "Double Egg Roll", "Egg Roll", "Veg Roll"] },
+            maggi: { title: "Maggi", items: ["Classic Maggi", "Cheese Classic Maggi", "Creamy Veg Maggi", "Cheese Schezwan Maggi", "JG's Veg Maggi", "Corn Chilli Cheese Maggi", "Peri Peri Maggi", "Paneer Maggi", "Korean Maggi", "Chicken Maggi"] },
+            burger: { title: "Burger", items: ["Classic Veggie Burger", "Aloo Tikki Burger", "Masala Tikki Burger", "Tandoori Paneer Burger", "Chicken Patty Burger", "Hot and Spicy Chicken Burger", "Extra Cheese"] },
+            freaks: { title: "Freaks", items: ["Kit-Kat Freak", "Oreo Freak", "Chocolate Freak", "Strawberry Freak", "Butterscotch Freak", "Pulpy Mango Freak", "Vanilla's More"] },
+            combos: { title: "Combos", items: [
+              { name: "Freaky Feast", desc: "Aloo Tikki Burger, Kit Kat Freak, French Fries" },
+              { name: "Desi Swag", desc: "Paneer Maggi, Butterscotch Milkshake, Peri Peri Fries" },
+              { name: "Slice & Spice", desc: "Onion & Corn Cheese Pizza, Veg Cheese Sandwich, Vanilla's More Freak" },
+              { name: "Squad Goals", desc: "Margherita Pizza, Paneer Roll, Egg Roll, White Sauce Pasta, Blue Lagoon Mojito, Peri Peri Fries" },
+              { name: "All Rounder", desc: "Corn Cheese Pizza, Paneer Cheese Sandwich, Red Sauce Pasta, Strawberry Freak, Paneer Momos, French Fries, Classic Maggi" }
+            ]}
+          }
+        },
+        kn: {
+          logoMain: "ಜಸ್ಟ್ ಗ್ರ್ಯಾಬ್ಸ್",
+          logoCafe: "ಕೆಫೇ",
+          tagline: "ತಿನ್ನಿ. ಕುಡಿಯಿರಿ. ಮಜಾ.",
+          note: "ಬೆಲೆಗಳು ಬದಲಾವಣೆಗೆ ಒಳಪಡುತ್ತವೆ.",
+          qrLabel: "ದಿಕ್ಕುಗಳಿಗಾಗಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ",
+          categories: {
+            hot_sips: { title: "ಬಿಸಿ ಪಾನೀಯ", items: ["ಚಹಾ", "ಕಾಫಿ", "ಬ್ಲ್ಯಾಕ್ ಕಾಫಿ", "ಚಾಕಲೇಟ್ ಕಾಫಿ", "ನಿಂಬೆ ಚಹಾ", "ಬಾದಾಮ್ ಹಾಲು"] },
+            mojitos: { title: "ಮೊಜಿಟೋಸ್", items: ["ಕ್ಲಾಸಿಕ್ ಮೊಜಿಟೋ", "ಸ್ಟ್ರಾಬೆರಿ ಮೊಜಿಟೋ", "ಬ್ಲೂ ಲಾಗೂನ್", "ಗ್ರೀನ್ ಆಪಲ್ ಮೊಜಿಟೋ", "ಟ್ರಾಪಿಕಲ್ ಲವ್", "2 ಸ್ಪೈನ್", "ಹ್ಯಾಮರ್ಡ್", "ನಿಂಬೆ ರಸ", "ಲೆಮನ್ ಸೋಡಾ"] },
+            milkshakes: { title: "ಮಿಲ್ಕ್‌ಶೇಕ್‌ಗಳು", items: ["JG's ಕೋಲ್ಡ್ ಕಾಫಿ", "ಕಿಟ್-ಕ್ಯಾಟ್ ಮಿಲ್ಕ್", "ಮಾವಿನ ಹಾಲು", "ಓರಿಯೋ ಮಿಲ್ಕ್", "ಚಾಕಲೇಟ್ ಮಿಲ್ಕ್", "ಸ್ಟ್ರಾಬೆರಿ ಮಿಲ್ಕ್", "ಬಟರ್‌ಸ್ಕಾಚ್ ಮಿಲ್ಕ್", "ಗುಲಾಬಿ ಹಾಲು", "ಪಿಸ್ಟಾ ಮಿಲ್ಕ್", "ವೆನಿಲಾ ಮಿಲ್ಕ್"] },
+            chaats: { title: "ಚಾಟ್‌ಗಳು", items: ["ಜಸ್ ಗ್ರ್ಯಾಬ್‌ಸ್ ಸ್ಪೆಷಲ್", "ಪಾಣಿ ಪುರಿ", "ದಹಿ ಪುರಿ", "ಭೇಲ್ ಪುರಿ", "ಮಸಾಲಾ ಪುರಿ", "ಟಿಕ್ಕಿ ಪುರಿ", "ಸೇವ್ ಪುರಿ", "ಬೋಟಿ ಮಸಾಲಾ", "ನಿಪ್ಪಟ್ ಮಸಾಲಾ", "ಸಮೋಸಾ ಮಸಾಲಾ"] },
+            bites: { title: "ಸ್ನ್ಯಾಕ್ಸ್", items: ["ಫ್ರೆಂಚ್ ಫ್ರೈಸ್", "ಪೆರಿ ಪೆರಿ ಫ್ರೈಸ್", "ಚೀಸ್ ಫ್ರೈಸ್", "ಚಿಕನ್ ಚೀಸ್ ಫ್ರೈಸ್"] },
+            nuggets: { title: "ನಗೆಟ್‌ಗಳು", items: ["ಚಿಕನ್ ನಗೆಟ್‌ಗಳು", "ಚೀಸ್ ಕಾರ್ನ್ ನಗೆಟ್‌ಗಳು", "ವೆಜ್ ಫಿಂಗರ್ಸ್", "ಚೀಸ್ ಬಾಲ್ಸ್", "ವೆಜ್ ಸ್ಮೈಲೀಸ್"] },
+            momos: { title: "ಮೊಮೋಸ್", items: ["ಚಿಕನ್ ಮೊಮೋಸ್", "ಕಾರ್ನ್ ಮೊಮೋಸ್", "ಪನೀರ್ ಮೊಮೋಸ್", "ವೆಜ್ ಮೊಮೋಸ್"] },
+            pasta: { title: "ಪಾಸ್ಟಾ", items: ["ಚಿಕನ್ ಪಾಸ್ಟಾ", "ರೆಡ್ ಸಾಸ್ ಪಾಸ್ಟಾ", "ವೈಟ್ ಸಾಸ್ ಪಾಸ್ಟಾ"] },
+            pizza: { title: "ಪಿಜ್ಜಾ", items: ["ಚಿಕನ್ ಟಿಕ್ಕಾ ಪಿಜ್ಜಾ", "ಪನೀರ್ ಟಿಕ್ಕಾ ಪಿಜ್ಜಾ", "ಲೋಡೆಡ್ ವೆಜ್ ಪಿಜ್ಜಾ", "ಕಾರ್ನ್ ಚೀಸ್ ಪಿಜ್ಜಾ", "ಕಾರ್ನ್ ಮತ್ತು ಜಲಪೆನೋ ಪಿಜ್ಜಾ", "ಜಲಪೆನೋ ಪಿಜ್ಜಾ", "ಈರುಳ್ಳಿ ಚೀಸ್ ಪಿಜ್ಜಾ", "ಈರುಳ್ಳಿ ಮತ್ತು ಕಾರ್ನ್ ಪಿಜ್ಜಾ", "ಚೀಸ್ ಕ್ಯಾಪ್ಸಿಕಂ ಪಿಜ್ಜಾ", "ಕ್ಯಾಪ್ಸಿಕಂ ಮತ್ತು ಈರುಳ್ಳಿ ಪಿಜ್ಜಾ", "ಮಾರ್ಗೆರಿಟಾ ಪಿಜ್ಜಾ", "ಅಧಿಕ ಚೀಸ್", "ಅಧಿಕ ಪನೀರ್", "ಅಧಿಕ ಚಿಕನ್"] },
+            sandwich: { title: "ಸ್ಯಾಂಡ್‌ವಿಚ್", items: ["ವೆಜ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ವೆಜ್ ಚೀಸ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಪನೀರ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಪನೀರ್ ಚೀಸ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಸ್ಚೆಜ್ವಾನ್ ಪನೀರ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಸ್ಚೆಜ್ವಾನ್ ಪನೀರ್ ಚೀಸ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಪೆರಿ ಪೆರಿ ಪನೀರ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಪೆರಿ ಪೆರಿ ಪನೀರ್ ಚೀಸ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಚಿಕನ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಚಿಕನ್ ಚೀಸ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಚಿಕನ್ ಡಬಲ್ ಡೆಕರ್ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ವೆಜ್ ಪ್ಯಾಟಿ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಚಿಕನ್ ಪ್ಯಾಟಿ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ಆಲೂ ಟಿಕ್ಕಿ ಸ್ಯಾಂಡ್‌ವಿಚ್", "ತಂದೂರಿ ಪನೀರ್ ಪ್ಯಾಟಿ ಸ್ಯಾಂಡ್‌ವಿಚ್"] },
+            rolls: { title: "ರೋಲ್‌ಗಳು", items: ["ಚಿಕನ್ ರೋಲ್", "ಪೆರಿ ಪೆರಿ ಚಿಕನ್ ರೋಲ್", "ಚಿಕನ್ ಚೀಸ್ ರೋಲ್", "ಪನೀರ್ ಚೀಸ್ ರೋಲ್", "ಸ್ಚೆಜ್ವಾನ್ ಪನೀರ್ ರೋಲ್", "ಸ್ಚೆಜ್ವಾನ್ ಪನೀರ್ ಚೀಸ್ ರೋಲ್", "ಪನೀರ್ ರೋಲ್", "ವೆಜ್ ಚೀಸ್ ರೋಲ್", "ಡಬಲ್ ಎಗ್ ರೋಲ್", "ಎಗ್ ರೋಲ್", "ವೆಜ್ ರೋಲ್"] },
+            maggi: { title: "ಮ್ಯಾಗಿ", items: ["ಕ್ಲಾಸಿಕ್ ಮ್ಯಾಗಿ", "ಚೀಸ್ ಕ್ಲಾಸಿಕ್ ಮ್ಯಾಗಿ", "ಕ್ರೀಮಿ ವೆಜ್ ಮ್ಯಾಗಿ", "ಚೀಸ್ ಸ್ಚೆಜ್ವಾನ್ ಮ್ಯಾಗಿ", "JG's ವೆಜ್ ಮ್ಯಾಗಿ", "ಕಾರ್ನ್ ಚಿಲಿ ಚೀಸ್ ಮ್ಯಾಗಿ", "ಪೆರಿ ಪೆರಿ ಮ್ಯಾಗಿ", "ಪನೀರ್ ಮ್ಯಾಗಿ", "ಕೊರಿಯನ್ ಮ್ಯಾಗಿ", "ಚಿಕನ್ ಮ್ಯಾಗಿ"] },
+            burger: { title: "ಬರ್ಗರ್", items: ["ಕ್ಲಾಸಿಕ್ ವೆಜ್ಜಿ ಬರ್ಗರ್", "ಆಲೂ ಟಿಕ್ಕಿ ಬರ್ಗರ್", "ಮಸಾಲಾ ಟಿಕ್ಕಿ ಬರ್ಗರ್", "ತಂದೂರಿ ಪನೀರ್ ಬರ್ಗರ್", "ಚಿಕನ್ ಪ್ಯಾಟಿ ಬರ್ಗರ್", "ಹಾಟ್ ಅಂಡ್ ಸ್ಪೈಸಿ ಚಿಕನ್ ಬರ್ಗರ್", "ಅಧಿಕ ಚೀಸ್"] },
+            freaks: { title: "ಫ್ರೀಕ್ಸ್", items: ["ಕಿಟ್-ಕ್ಯಾಟ್ ಫ್ರೀಕ್", "ಓರಿಯೋ ಫ್ರೀಕ್", "ಚಾಕಲೇಟ್ ಫ್ರೀಕ್", "ಸ್ಟ್ರಾಬೆರಿ ಫ್ರೀಕ್", "ಬಟರ್‌ಸ್ಕಾಚ್ ಫ್ರೀಕ್", "ಪಲ್ಪಿ ಮ್ಯಾಂಗೋ ಫ್ರೀಕ್", "ವೆನಿಲಾಸ್ ಮೋರ್"] },
+            combos: { title: "ಕಾಂಬೋಗಳು", items: [
+              { name: "ಫ್ರೀಕಿ ಫೀಸ್ಟ್", desc: "ಆಲೂ ಟಿಕ್ಕಿ ಬರ್ಗರ್, ಕಿಟ್ ಕ್ಯಾಟ್ ಫ್ರೀಕ್, ಫ್ರೆಂಚ್ ಫ್ರೈಸ್" },
+              { name: "ದೇಸಿ ಸ್ವಾಗ್", desc: "ಪನೀರ್ ಮ್ಯಾಗಿ, ಬಟರ್‌ಸ್ಕಾಚ್ ಮಿಲ್ಕ್‌ಶೇಕ್, ಪೆರಿ ಪೆರಿ ಫ್ರೈಸ್" },
+              { name: "ಸ್ಲೈಸ್ ಅಂಡ್ ಸ್ಪೈಸ್", desc: "ಈರುಳ್ಳಿ ಮತ್ತು ಕಾರ್ನ್ ಚೀಸ್ ಪಿಜ್ಜಾ, ವೆಜ್ ಚೀಸ್ ಸ್ಯಾಂಡ್‌ವಿಚ್, ವೆನಿಲಾಸ್ ಮೋರ್ ಫ್ರೀಕ್" },
+              { name: "ಸ್ಕ್ವಾಡ್ ಗೋಲ್ಸ್", desc: "ಮಾರ್ಗೆರಿಟಾ ಪಿಜ್ಜಾ, ಪನೀರ್ ರೋಲ್, ಎಗ್ ರೋಲ್, ವೈಟ್ ಸಾಸ್ ಪಾಸ್ಟಾ, ಬ್ಲೂ ಲಾಗೂನ್ ಮೊಜಿಟೋ, ಪೆರಿ ಪೆರಿ ಫ್ರೈಸ್" },
+              { name: "ಆಲ್ ರೌಂಡರ್", desc: "ಕಾರ್ನ್ ಚೀಸ್ ಪಿಜ್ಜಾ, ಪನೀರ್ ಚೀಸ್ ಸ್ಯಾಂಡ್‌ವಿಚ್, ರೆಡ್ ಸಾಸ್ ಪಾಸ್ಟಾ, ಸ್ಟ್ರಾಬೆರಿ ಫ್ರೀಕ್, ಪನೀರ್ ಮೊಮೋಸ್, ಫ್ರೆಂಚ್ ಫ್ರೈಸ್, ಕ್ಲಾಸಿಕ್ ಮ್ಯಾಗಿ" }
+            ]}
+          }
+        }
+      };
+
+      var currentLang = 'en';
+      var langEnEl = document.getElementById('langEn');
+      var langKnEl = document.getElementById('langKn');
+      var taglineEl = document.getElementById('tagline');
+      var noteEl = document.getElementById('note');
+      var qrLabelEl = document.getElementById('qrLabel');
+      var logoMainEl = document.getElementById('logoMain');
+      var logoCafeEl = document.getElementById('logoCafe');
+
+      function applyLang(lang) {
+        currentLang = lang;
+        document.body.classList.toggle('lang-kn', lang === 'kn');
+        var t = translations[lang];
+        logoMainEl.textContent = t.logoMain;
+        logoCafeEl.textContent = t.logoCafe;
+        taglineEl.textContent = t.tagline;
+        noteEl.textContent = t.note;
+        qrLabelEl.textContent = t.qrLabel;
+        langEnEl.classList.toggle('active', lang === 'en');
+        langKnEl.classList.toggle('active', lang === 'kn');
+
+        document.querySelectorAll('.category[data-category]').forEach(function(section) {
+          var catId = section.getAttribute('data-category');
+          var cat = t.categories[catId];
+          if (!cat) return;
+          var titleEl = section.querySelector('.category-title');
+          if (titleEl) titleEl.textContent = cat.title;
+          var itemEls = section.querySelectorAll('.item');
+          var items = cat.items;
+          itemEls.forEach(function(item, i) {
+            if (i >= items.length) return;
+            var nameEl = item.querySelector('.item-name');
+            var descEl = item.querySelector('.item-desc');
+            if (descEl && typeof items[i] === 'object') {
+              nameEl.textContent = items[i].name;
+              descEl.textContent = items[i].desc;
+            } else if (nameEl) {
+              nameEl.textContent = items[i];
+            }
+          });
+        });
+      }
+
+      langEnEl.addEventListener('click', function(e) { e.preventDefault(); applyLang('en'); });
+      langKnEl.addEventListener('click', function(e) { e.preventDefault(); applyLang('kn'); });
+      langEnEl.classList.add('active');
+    })();
+  </script>
+</body>
+</html>
